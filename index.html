@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gomi</title>
+    <style type="text/css">
+    #fixed_btn
+    {
+      position: fixed;
+      bottom: 10px; 
+      right: 10px;
+      padding: 6px 40px;
+    }
+    </style>
+</head>
+
+<body>
+    
+    <button id="fixed_btn" onclick="changeimage()">回答の表示を切り替える</button>
+    
+    <!-- main context -->
+    <article style="text-align:center">
+        <p id="gomi"></p>
+        <img src="./images/1_o.png"><br>
+        <img src="./images/2_o.png"><br>
+        <img src="./images/3_o.png"><br>
+        <img src="./images/4_o.png"><br>
+        <img src="./images/5_o.png"><br>
+        <img src="./images/6_o.png"><br>
+        <img src="./images/7_o.png"><br>
+    </article>
+    <!-- main context -->
+
+    <script>
+        
+        var isAnswer = true;
+        var img = document.getElementsByTagName("img");
+        var ans = ["./images/1_o.png","./images/2_o.png","./images/3_o.png","./images/4_o.png","./images/5_o.png","./images/6_o.png","./images/7_o.png"];
+        var que = ["./images/1_q.png","./images/2_q.png","./images/3_q.png","./images/4_q.png","./images/5_q.png","./images/6_q.png","./images/7_q.png"];
+        
+        function changeimage(){
+
+            for(var i = 0; i<img.length; i++){
+                img.item(i).src = isAnswer ? que[i] : ans[i];
+            }
+            
+            isAnswer = isAnswer ? false : true;
+
+        }
+    </script>
+
+</body>
+
+</html>
