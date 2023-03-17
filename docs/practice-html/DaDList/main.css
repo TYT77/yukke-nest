@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+/*レイアウト用CSS*/
+
+.drag-list li {
+	line-height:3em;
+	border:1px solid #cccccc;
+	cursor:pointer;
+}
