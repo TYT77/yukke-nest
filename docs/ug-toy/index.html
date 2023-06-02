@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>UGお遊び</title>
+    <!-- css 埋め込み -->
+    <style>
+        body {
+            margin: 0 auto;
+            word-break: break-all;
+        }
+
+        h1 {
+            text-align: center;
+        } 
+        .container {
+            width: 80%;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        ul {
+            padding-inline-start: 0;
+        }
+        
+        li {
+            list-style-type: none;
+            border: solid 1px black;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            height: 50px;
+            line-height: 50px;
+        }
+
+        li:hover {
+            background: #adc6ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>クイズ！</h1>
+    
+    <div class="container">
+        
+        <!-- 出題中に使う -->
+        <p id="question"></p>
+        <ul id="answers"></ul>
+
+        <!-- 結果表示に使う -->
+        <p id="result"></p>
+        <button id="restart-button">Restart</button>
+
+    </div>
+
+    <script >
+    (() => {
+    
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzDh59ufB_ii9Hn2Ik7L7QlWC3yi1tikMPc15PmVWzoihCRLTS6czua4A2XqMb0t5Ll/exec';
+
+    const gameState = {
+        quizzes : [],
+        currentIndex : 0,
+        numberOfCorrects : 0
+    };
+
+    const question = document.getElementById('question');
+    const result = document.getElementById('result');
+    const answers = document.getElementById('answers');
+    const button = document.getElementById('restart-button');
+
+    window.addEventListener('load', (event) => {
+        fetchQuizData();
+    });
+
+    button.addEventListener('click', (event) => {
+        fetchQuizData();
+    });
+
+    const fetchQuizData = () => {
+        question.textContent = '問題読み込み中';
+        result.textContent = '';
+        button.hidden = true;
+
+        fetch(API_URL)
+        .then(response => response.json())
+        .then((data) => {
+            
+            gameState.quizzes = data.results;
+            console.log(gameState.quizzes);
+            
+            gameState.currentIndex = 0;
+            gameState.numberOfCorrects = 0;
+
+            setNextQuiz();
+        });
+    
+    };
+
+    const setNextQuiz = () => {
+        question.textContent = '';
+        
+        removeAllAnswers();
+
+        if (gameState.currentIndex < gameState.quizzes.length ) {
+            const quiz = gameState.quizzes[gameState.currentIndex];
+            makeQuiz(quiz);
+        } else {
+            finishQuiz();
+        }
+    };
+
+    const finishQuiz = () => {
+        result.textContent = `${gameState.numberOfCorrects}/${gameState.quizzes.length} corrects.`;
+        button.hidden = false;
+    };
+
+    const removeAllAnswers = () => {
+        while (answers.firstChild) {
+            answers.removeChild( answers.firstChild );
+        }
+    };
+
+    const makeQuiz = (quiz) => {
+        const answer_list = buildAnswers(quiz);
+        question.textContent = unescapeHTML(quiz.question);
+        
+        answer_list.forEach((answer) => {
+            
+            const liElement = document.createElement('li');
+            liElement.textContent = unescapeHTML(answer);
+            answers.appendChild(liElement);
+
+            liElement.addEventListener('click', (event) => {
+                unescapedCorrectAnswer = unescapeHTML(quiz.correct_answer);
+                
+                if (event.target.textContent === unescapedCorrectAnswer) {
+                    gameState.numberOfCorrects++;
+                    alert('Correct answer!!');
+                } else {
+                    alert(`Wrong answer... (The correct answer is "${unescapedCorrectAnswer}")`);
+                }
+
+                gameState.currentIndex++;
+                setNextQuiz();
+            });
+        });
+
+    };
+
+    const buildAnswers = (quiz) => {
+        const answers = [
+        quiz.correct_answer,
+        ...quiz.incorrect_answers
+        ];
+
+        const shuffledAnswers = shuffle(answers);
+
+        return shuffledAnswers;
+    };
+
+    const shuffle = (array) => {
+        const copiedArray = array.slice();
+        for (let i = copiedArray.length - 1; i >= 0; i--){
+        const rand = Math.floor( Math.random() * ( i + 1 ) );
+        [copiedArray[i], copiedArray[rand]] = [copiedArray[rand], copiedArray[i]]
+        }
+
+        return copiedArray;
+    };
+
+    const unescapeHTML = (str) => {
+        const div = document.createElement("div");
+        div.innerHTML = str.replace(/</g,"&lt;")
+                        .replace(/>/g,"&gt;")
+                        .replace(/ /g, "&nbsp;")
+                        .replace(/\r/g, "&#13;")
+                        .replace(/\n/g, "&#10;");
+
+        return div.textContent || div.innerText;
+    };
+    })();
+
+  </script>
+</body>
+</html>
