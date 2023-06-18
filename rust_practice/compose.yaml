@@ -7,6 +7,7 @@ services:
       - ./app:/app
     working_dir: /app
     tty: true
+    ports:
+      - 8000:8000
     # command: bash -c "cargo build --release && cargo run --release"
-    # ports:
-      # - 8000:8000
+    
