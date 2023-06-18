@@ -6,3 +6,4 @@ RUN cargo install cargo-generate wasm-pack && \
     npm install npm@latest -g
 
 ENV USER=root
+ENV NODE_OPTIONS='--openssl-legacy-provider'
