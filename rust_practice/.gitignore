@@ -17,3 +17,8 @@ Cargo.lock
 bin/
 pkg/
 wasm-pack.log
+
+# node 
+node_modules
+dist
+
