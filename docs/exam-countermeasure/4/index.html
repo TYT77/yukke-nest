@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前期試験対策</title>
+    <style type="text/css">
+    
+    #fixed_btn
+    {
+      font-size: 18px;
+      position: fixed;
+      bottom: 10px; 
+      right: 10px;
+      padding: 9px 60px;
+    }
+    
+    img {
+        width: 90%;
+    }
+    </style>
+</head>
+
+<body>
+    
+    <button id="fixed_btn" onclick="changeimage()">回答の表示を切り替える</button>
+    
+    <!-- main context -->
+    <article style="text-align:center">
+        <p id="gomi"></p>
+        <img src="./images/image_001.png"><br>
+        <img src="./images/image_002.png"><br>
+        <img src="./images/image_003.png"><br>
+        <img src="./images/image_004.png"><br>
+    </article>
+    <!-- main context -->
+
+    <script>
+        
+        var isAnswer = true;
+        var img = document.getElementsByTagName("img");
+        
+        function changeimage(){
+        
+            for(var i = 0; i<img.length; i++){
+                img.item(i).src = "./images/image_" + ( '000' + (i + 1) ).slice( -3 ) + ( isAnswer ? "_q" : "" ) + ".png";
+            }
+            
+            isAnswer = isAnswer ? false : true;
+        
+        }
+    </script>
+
+</body>
+
+</html>
